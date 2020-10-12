@@ -1,0 +1,1 @@
+docker run -it -v mongodata:/data/db --name mongodb -d mongo
