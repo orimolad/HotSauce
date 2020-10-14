@@ -152,7 +152,7 @@ var MongoDbItemClientFactory = /** @class */ (function () {
                         _b = (_a = this.db.collection(this.collection_name)).updateOne;
                         return [4 /*yield*/, db_item.next()];
                     case 2:
-                        _b.apply(_a, [_c.sent(), item]);
+                        _b.apply(_a, [_c.sent(), { $set: item }, { upsert: true }]);
                         return [3 /*break*/, 4];
                     case 3: throw { error: "not connected" };
                     case 4: return [2 /*return*/];

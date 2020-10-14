@@ -39,67 +39,43 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var MongoDBItemClientFactory_1 = require("./clients/mongodb/MongoDBItemClientFactory");
 var express_1 = __importDefault(require("express"));
+var EndpointFactory_1 = require("./endpoint/EndpointFactory");
 var app = express_1.default();
 var port = 3000;
 // function find
 // Use connect method to connect to the Server
-var userClient = new MongoDBItemClientFactory_1.MongoDbItemClientFactory("user");
-var itemClient = new MongoDBItemClientFactory_1.MongoDbItemClientFactory("item");
-var orderClient = new MongoDBItemClientFactory_1.MongoDbItemClientFactory('order');
-var orderItemClient = new MongoDBItemClientFactory_1.MongoDbItemClientFactory('orderItem');
-userClient.build().then(function () {
-    app.use(express_1.default.json());
-    app.post('/user', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-        var item;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, userClient.create(req.body)];
-                case 1:
-                    item = _a.sent();
-                    res.json(item);
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-    app.patch('/user', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-        var item;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, userClient.update(req.body)];
-                case 1:
-                    item = _a.sent();
-                    res.json(item);
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-    app.get('/user/:name', function (req, res) {
-        //get user user by name
-        var query = { name: req.params.name };
-        userClient.read(query).next().then(function (item) {
-            console.log('user', item);
-            res.send(item);
-        });
+var startApp = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var userEndpoint, itemEndpoint, orderEndpoint, orderItemEndpoint;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                app.use(express_1.default.json());
+                userEndpoint = new EndpointFactory_1.EndpointFactory("user");
+                return [4 /*yield*/, userEndpoint.registerEndpoint(app)];
+            case 1:
+                _a.sent();
+                itemEndpoint = new EndpointFactory_1.EndpointFactory("item");
+                return [4 /*yield*/, itemEndpoint.registerEndpoint(app)];
+            case 2:
+                _a.sent();
+                orderEndpoint = new EndpointFactory_1.EndpointFactory("order");
+                return [4 /*yield*/, orderEndpoint.registerEndpoint(app)];
+            case 3:
+                _a.sent();
+                orderItemEndpoint = new EndpointFactory_1.EndpointFactory("orderItem");
+                return [4 /*yield*/, orderItemEndpoint.registerEndpoint(app)];
+            case 4:
+                _a.sent();
+                //start server and tell it to listen
+                app.listen(port, function () {
+                    console.log("Example app listening at http://localhost:" + port);
+                });
+                return [2 /*return*/];
+        }
     });
-    app.delete('/user/:name', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-        var item;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, userClient.delete({ name: req.params.name })];
-                case 1:
-                    item = _a.sent();
-                    res.json(item);
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-    //start server and tell it to listen
-    app.listen(port, function () {
-        console.log("Example app listening at http://localhost:" + port);
-    });
-});
+}); };
+startApp();
 // orderClient.build().then(async () =>{
 //     await orderClient.create({
 //         orderNumber: 1,

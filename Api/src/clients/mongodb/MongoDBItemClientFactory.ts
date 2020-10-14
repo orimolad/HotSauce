@@ -97,7 +97,7 @@ export class MongoDbItemClientFactory<T extends IHasName > implements IMongoDBIt
         if(this.connectedFlag){
             let db_item = await this.itemExistsByName(item);
             if( !db_item ) return;
-            this.db.collection(this.collection_name).updateOne(await db_item.next(),item)
+            this.db.collection(this.collection_name).updateOne(await db_item.next(),{$set:item},{upsert:true})
         } else {
             throw { error: "not connected" }
         }

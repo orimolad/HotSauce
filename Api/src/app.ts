@@ -12,52 +12,34 @@ import { getuid } from 'process';
 import express from 'express';
 import { read } from 'fs';
 import { create } from 'domain';
+import { EndpointFactory } from './endpoint/EndpointFactory';
 const app = express();
 const port = 3000;
 
 // function find
 // Use connect method to connect to the Server
-var userClient = new MongoDbItemClientFactory<IUser>("user");
-var itemClient = new MongoDbItemClientFactory<IItem>("item");
-var orderClient = new MongoDbItemClientFactory<IOrder>('order');
-var orderItemClient = new MongoDbItemClientFactory<IOrderItem>('orderItem');
-
-userClient.build().then(()=>{
+const startApp = async() => {
     app.use(express.json())
-    app.post('/user', async (req, res) => {
-        //create user from request json
-        let item = await userClient.create(req.body)
-        res.json(item)
-    })
 
-    app.patch('/user', async (req, res) => {
-        //update user from request json
-        let item = await userClient.update(req.body)
-        res.json(item)
-    })
+    let userEndpoint = new EndpointFactory<IUser>("user");
+    await userEndpoint.registerEndpoint(app);
 
-    app.get('/user/:name', (req, res) => {
-        //get user user by name
-        let query = { name: req.params.name }
-        userClient.read(query).next().then((item)=>{
-            console.log('user', item)
-            res.send(item)
-        })
-        
-    })
+    let itemEndpoint = new EndpointFactory<IItem>("item");
+    await itemEndpoint.registerEndpoint(app);
 
-    app.delete('/user/:name', async (req, res) => {
-        //delete a user by name
-        let item = await userClient.delete({name: req.params.name})
-        res.json(item)
-    })
+    let orderEndpoint = new EndpointFactory<IOrder>("order");
+    await orderEndpoint.registerEndpoint(app);
 
+    let orderItemEndpoint = new EndpointFactory<IOrderItem>("orderItem");
+    await orderItemEndpoint.registerEndpoint(app);
 
     //start server and tell it to listen
     app.listen(port, () => {
         console.log(`Example app listening at http://localhost:${port}`)
     })
-})
+}
+
+startApp()
 
 
 // orderClient.build().then(async () =>{
