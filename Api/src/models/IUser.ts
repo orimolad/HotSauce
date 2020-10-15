@@ -9,6 +9,6 @@ export interface IUser {
     age: number;
     allergies: string[];
     address:string;
-    hottness:Hottness;
+    hottness:Hottness[];
     subscription_level: SubscriptionLevel;
 }

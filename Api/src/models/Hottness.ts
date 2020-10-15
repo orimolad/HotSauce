@@ -1,5 +1,7 @@
 
 export enum Hottness {
+    NonSense = 'nonSense',
     Hot = "high",
-    Medium = 'medium'
+    Medium = 'medium',
+    Mild = "mild"
 }
