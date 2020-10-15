@@ -13,6 +13,7 @@ import express from 'express';
 import { read } from 'fs';
 import { create } from 'domain';
 import { EndpointFactory } from './endpoint/EndpointFactory';
+import cors from "cors";
 const app = express();
 const port = 3000;
 
@@ -20,7 +21,7 @@ const port = 3000;
 // Use connect method to connect to the Server
 const startApp = async() => {
     app.use(express.json())
-
+    app.use(cors());
     let userEndpoint = new EndpointFactory<IUser>("user");
     await userEndpoint.registerEndpoint(app);
 
